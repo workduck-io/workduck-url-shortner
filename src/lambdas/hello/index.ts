@@ -1,12 +1,24 @@
 import { handlerPath } from '@libs/handlerResolver';
 
-export default {
-  handler: `${handlerPath(__dirname)}/handler.main`,
+export const shorten = {
+  handler: `${handlerPath(__dirname)}/handler.shorten_main`,
   events: [
     {
       http: {
-        method: 'post',
-        path: 'hello',
+        method: 'POST',
+        path: '/shorten',
+      },
+    },
+  ],
+};
+
+export const navigate = {
+  handler: `${handlerPath(__dirname)}/handler.navigate_main`,
+  events: [
+    {
+      http: {
+        method: 'get',
+        path: '/{short}',
       },
     },
   ],

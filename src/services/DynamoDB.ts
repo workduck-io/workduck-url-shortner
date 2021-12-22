@@ -12,16 +12,12 @@ const DocumentClient = new DynamoDB.DocumentClient({
 // Instantiate a table
 export const MyTable = new Table({
   // Specify table name (used by DynamoDB)
-  name: `datastore-${process.env.stageEnv}`,
+  name: `urlstore-${process.env.stageEnv}`,
 
   // Define partition and sort keys
   partitionKey: 'pk',
   sortKey: 'sk',
   indexes: {
-    'ak-sk-index': {
-      partitionKey: 'ak',
-      sortKey: 'sk',
-    },
     'reverse-index': {
       partitionKey: 'sk',
       sortKey: 'ak',

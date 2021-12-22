@@ -1,1 +1,1 @@
-export { default as hello } from './hello';
+export { navigate, shorten } from './hello';

@@ -26,3 +26,5 @@ export const getRegion = () => {
 export const getUniqueId = () => {
   return nanoid();
 };
+
+export const DEFAULT_SHORT_URL_LENGTH = 5;

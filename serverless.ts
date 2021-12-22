@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript';
 import Table from 'infra/dynamodb/single-table';
-import hello from 'src/lambdas/hello';
+import { navigate, shorten } from 'src/lambdas';
 
 const serverlessConfiguration: AWS = {
   service: 'mex-integration',
@@ -26,16 +26,45 @@ const serverlessConfiguration: AWS = {
     lambdaHashingVersion: '20201221',
     httpApi: {
       cors: true,
-      disableDefaultEndpoint: true,
+    },
+    iam: {
+      role: {
+        statements: [
+          // {
+          //   Effect: 'Allow',
+          //   Action: ['lambda:InvokeFunction'],
+          //   Resource: ['*'],
+          // },
+          {
+            Effect: 'Allow',
+            Action: [
+              'dynamodb:Scan',
+              'dynamodb:Query',
+              'dynamodb:GetItem',
+              'dynamodb:PutItem',
+              'dynamodb:UpdateItem',
+              'dynamodb:DeleteItem',
+              'dynamodb:DescribeTable',
+              'dynamodb:BatchWriteItem',
+              'dynamodb:BatchGetItem',
+            ],
+            Resource: 'arn:aws:dynamodb:us-east-1:*:*',
+          },
+        ],
+      },
     },
   },
   // import the function via paths
-  functions: { hello },
+  functions: { shorten, navigate },
   resources: {
     Resources: Table,
   },
+  useDotenv: true,
   package: { individually: true },
   custom: {
+    'serverless-offline': {
+      httpPort: 4000,
+    },
     myStage: '${opt:stage, self:provider.stage}',
     esbuild: {
       bundle: true,
@@ -49,13 +78,13 @@ const serverlessConfiguration: AWS = {
     },
     dynamodb: {
       stages: ['local'],
-      dbPath: '/dbMocks',
       start: {
         port: 8000,
-        inMemory: false,
-        seed: true,
-        migrate: true,
         convertEmptyValues: true,
+        heapInitial: '200m',
+        heapMax: '1g',
+        migrate: true,
+        dbPath: './dbMocks/',
       },
     },
   },

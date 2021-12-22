@@ -2,7 +2,7 @@ export default {
   SingleTableDesignDynamoDBTable: {
     Type: 'AWS::DynamoDB::Table',
     Properties: {
-      TableName: "datastore-${opt:stage, 'local'}",
+      TableName: "urlstore-${opt:stage, 'local'}",
       AttributeDefinitions: [
         {
           AttributeName: 'pk',
@@ -14,10 +14,6 @@ export default {
         },
         {
           AttributeName: 'ak',
-          AttributeType: 'S',
-        },
-        {
-          AttributeName: '_et',
           AttributeType: 'S',
         },
       ],
@@ -65,26 +61,6 @@ export default {
             },
             {
               AttributeName: 'sk',
-              KeyType: 'RANGE',
-            },
-          ],
-          Projection: {
-            ProjectionType: 'ALL',
-          },
-          ProvisionedThroughput: {
-            ReadCapacityUnits: '15',
-            WriteCapacityUnits: '15',
-          },
-        },
-        {
-          IndexName: '_et-ak-index',
-          KeySchema: [
-            {
-              AttributeName: '_et',
-              KeyType: 'HASH',
-            },
-            {
-              AttributeName: 'ak',
               KeyType: 'RANGE',
             },
           ],

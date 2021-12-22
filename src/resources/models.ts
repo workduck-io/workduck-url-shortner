@@ -1,13 +1,19 @@
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   definitions: {
-    User: {
+    URL: {
       properties: {
-        name: {
+        expiry: {
+          type: 'number',
+        },
+        long: {
+          type: 'string',
+        },
+        short: {
           type: 'string',
         },
       },
-      required: ['name'],
+      required: ['long'],
       type: 'object',
     },
   },
