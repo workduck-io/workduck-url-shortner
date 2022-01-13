@@ -40,6 +40,7 @@
     "pretty-quick": "^3.1.1",
     "run": "^1.4.0",
     "serverless": "^2.66.2",
+    "serverless-domain-manager": "^5.2.0",
     "serverless-dynamodb-local": "^0.2.40",
     "serverless-esbuild": "^1.17.1",
     "serverless-offline": "^8.3.0",

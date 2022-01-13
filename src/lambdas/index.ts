@@ -1,1 +1,1 @@
-export { navigate, shorten } from './hello';
+export { navigate, shorten, stats } from './shortner';

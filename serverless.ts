@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript';
-import Table from 'infra/dynamodb/single-table';
-import { navigate, shorten } from 'src/lambdas';
+import Table from './infra/dynamodb/single-table';
+import { navigate, shorten, stats } from './src/lambdas';
 
 const serverlessConfiguration: AWS = {
   service: 'mex-integration',
@@ -9,11 +9,13 @@ const serverlessConfiguration: AWS = {
     'serverless-dynamodb-local',
     'serverless-esbuild',
     'serverless-offline',
+    'serverless-domain-manager',
   ],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
     stage: 'local',
+    memorySize: 128,
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -25,6 +27,24 @@ const serverlessConfiguration: AWS = {
     },
     lambdaHashingVersion: '20201221',
     httpApi: {
+      disableDefaultEndpoint: true,
+      authorizers: {
+        workduckAuthorizer: {
+          identitySource: '$request.header.Authorization',
+          issuerUrl: {
+            'Fn::Join': [
+              '',
+              [
+                'https://cognito-idp.',
+                '${opt:region, self:provider.region}',
+                '.amazonaws.com/',
+                'us-east-1_Zu7FAh7hj',
+              ],
+            ],
+          },
+          audience: ['6pvqt64p0l2kqkk2qafgdh13qe'],
+        },
+      },
       cors: true,
     },
     iam: {
@@ -55,7 +75,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { shorten, navigate },
+  functions: { shorten, navigate, stats },
   resources: {
     Resources: Table,
   },
@@ -64,6 +84,16 @@ const serverlessConfiguration: AWS = {
   custom: {
     'serverless-offline': {
       httpPort: 4000,
+    },
+    customDomain: {
+      http: {
+        domainName: 'url.workduck.io',
+        basePath: 'link',
+        stage: '${opt:stage, self:provider.stage}',
+        createRoute53Record: true,
+        endpointType: 'regional',
+        apiType: 'http',
+      },
     },
     myStage: '${opt:stage, self:provider.stage}',
     esbuild: {

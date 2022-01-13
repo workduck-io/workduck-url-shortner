@@ -12,7 +12,7 @@ const DocumentClient = new DynamoDB.DocumentClient({
 // Instantiate a table
 export const MyTable = new Table({
   // Specify table name (used by DynamoDB)
-  name: `urlstore-${process.env.stageEnv}`,
+  name: `url-store-${process.env.stageEnv}`,
 
   // Define partition and sort keys
   partitionKey: 'pk',

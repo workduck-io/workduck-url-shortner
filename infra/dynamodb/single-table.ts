@@ -2,7 +2,7 @@ export default {
   SingleTableDesignDynamoDBTable: {
     Type: 'AWS::DynamoDB::Table',
     Properties: {
-      TableName: "urlstore-${opt:stage, 'local'}",
+      TableName: "url-store-${opt:stage, 'local'}",
       AttributeDefinitions: [
         {
           AttributeName: 'pk',
