@@ -29,7 +29,11 @@ export const URLEntity = new Entity<URL>({
       partitionKey: true,
       default: () => DEFAULT_NAMESPACE,
     },
-    short: { sortKey: true, default: () => nanoid(DEFAULT_SHORT_URL_LENGTH) },
+    short: {
+      sortKey: true,
+      default: () => nanoid(DEFAULT_SHORT_URL_LENGTH),
+      prefix: 'LINK_',
+    },
     long: { required: true, type: 'string', map: 'ak' },
     expiry: {
       type: 'number',

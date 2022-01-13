@@ -1,6 +1,12 @@
 import type { AWS } from '@serverless/typescript';
 import Table from './infra/dynamodb/single-table';
-import { navigate, shorten, stats } from './src/lambdas';
+import {
+  namespaceDetails,
+  navigate,
+  shorten,
+  stats,
+  update,
+} from './src/lambdas';
 
 const serverlessConfiguration: AWS = {
   service: 'mex-integration',
@@ -75,7 +81,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { shorten, navigate, stats },
+  functions: { shorten, navigate, stats, namespaceDetails, update },
   resources: {
     Resources: Table,
   },

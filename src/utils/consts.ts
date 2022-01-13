@@ -30,3 +30,5 @@ export const getUniqueId = () => {
 export const DEFAULT_SHORT_URL_LENGTH = 5;
 
 export const DEFAULT_NAMESPACE = 'ROOT';
+
+export const KEYWORDS = ['update', 'shorten', 'stats'];

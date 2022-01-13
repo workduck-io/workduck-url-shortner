@@ -13,6 +13,19 @@ export const shorten = {
   ],
 };
 
+export const update = {
+  handler: `${handlerPath(__dirname)}/handler.update_main`,
+  events: [
+    {
+      httpApi: {
+        method: 'POST',
+        path: '/update',
+        authorizers: 'workduckAuthorizer',
+      },
+    },
+  ],
+};
+
 export const navigate = {
   handler: `${handlerPath(__dirname)}/handler.navigate_main`,
   events: [
@@ -32,6 +45,19 @@ export const stats = {
       httpApi: {
         method: 'GET',
         path: '/{namespace}/{short}/stats',
+        authorizers: 'workduckAuthorizer',
+      },
+    },
+  ],
+};
+
+export const namespaceDetails = {
+  handler: `${handlerPath(__dirname)}/handler.namespaceDetails_main`,
+  events: [
+    {
+      httpApi: {
+        method: 'GET',
+        path: '/{namespace}/stats',
         authorizers: 'workduckAuthorizer',
       },
     },
