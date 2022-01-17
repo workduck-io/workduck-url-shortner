@@ -5,7 +5,7 @@ import schema from '@resources/models';
 import 'source-map-support/register';
 import { KEYWORDS } from '../../utils/consts';
 import { URL, URLEntity, URLStatsEntity } from './interface';
-
+import {loadingPage} from '../../utils/loader';
 const URLSchema = schema.definitions.URL;
 const shorten: ValidatedEventAPIGatewayProxyEvent<
   typeof URLSchema
@@ -94,11 +94,12 @@ const navigate: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
     if (data?.long) {
       if (data.expiry && data.expiry > Date.now())
         return {
-          statusCode: 301,
+          statusCode: 200,
+
           headers: {
-            Location: data.long,
+            'Content-Type': 'text/html',
           },
-          body: '',
+          body: loadingPage(data.long),
         };
     } else
       return {
