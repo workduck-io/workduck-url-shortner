@@ -10,6 +10,7 @@ export interface URL {
   short?: string;
   long: string;
   expiry?: number;
+  metadata?: any;
 }
 
 export interface URLStats {
@@ -38,6 +39,10 @@ export const URLEntity = new Entity<URL>({
     expiry: {
       type: 'number',
       default: () => Date.now() + 1000 * 60 * 60 * 24 * 365,
+    },
+    metadata: {
+      type: 'map',
+      default: {},
     },
   },
 
