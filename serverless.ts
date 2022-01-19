@@ -90,6 +90,8 @@ const serverlessConfiguration: AWS = {
   custom: {
     'serverless-offline': {
       httpPort: 4000,
+      noAuth: true,
+      ignoreJWTSignature: true,
     },
     customDomain: {
       http: {
