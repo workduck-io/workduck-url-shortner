@@ -7,7 +7,7 @@ export const shorten = {
       httpApi: {
         method: 'POST',
         path: '/shorten',
-        authorizers: 'workduckAuthorizer',
+        authorizer: 'workduckAuthorizer',
       },
     },
   ],
@@ -20,7 +20,7 @@ export const update = {
       httpApi: {
         method: 'POST',
         path: '/update',
-        authorizers: 'workduckAuthorizer',
+        authorizer: 'workduckAuthorizer',
       },
     },
   ],
@@ -45,7 +45,7 @@ export const stats = {
       httpApi: {
         method: 'GET',
         path: '/{namespace}/{short}/stats',
-        authorizers: 'workduckAuthorizer',
+        authorizer: 'workduckAuthorizer',
       },
     },
   ],
@@ -58,7 +58,7 @@ export const namespaceDetails = {
       httpApi: {
         method: 'GET',
         path: '/{namespace}/stats',
-        authorizers: 'workduckAuthorizer',
+        authorizer: 'workduckAuthorizer',
       },
     },
   ],
