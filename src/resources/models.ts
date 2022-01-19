@@ -9,6 +9,7 @@ export default {
         long: {
           type: 'string',
         },
+        metadata: {},
         namespace: {
           type: 'string',
         },

@@ -5,7 +5,7 @@ import schema from '@resources/models';
 import 'source-map-support/register';
 import { KEYWORDS } from '../../utils/consts';
 import { URL, URLEntity, URLStatsEntity } from './interface';
-import {loadingPage} from '../../utils/loader';
+import { loadingPage } from '../../utils/loader';
 const URLSchema = schema.definitions.URL;
 const shorten: ValidatedEventAPIGatewayProxyEvent<
   typeof URLSchema
