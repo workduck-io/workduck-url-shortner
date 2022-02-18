@@ -10,6 +10,9 @@ const URLSchema = schema.definitions.URL;
 const shorten: ValidatedEventAPIGatewayProxyEvent<
   typeof URLSchema
 > = async event => {
+  if (typeof event.body === 'string') {
+    event.body = JSON.parse(event.body);
+  }
   try {
     if (
       KEYWORDS.includes(event.body.namespace) ||
@@ -157,7 +160,7 @@ const namespaceDetails: ValidatedEventAPIGatewayProxyEvent<
       return formatJSONResponse(url_details.Items);
   }
 };
-export const shorten_main = middyfy(shorten, URLSchema);
+export const shorten_main = middyfy(shorten);
 export const navigate_main = middyfy(navigate);
 export const stats_main = middyfy(stats);
 export const namespaceDetails_main = middyfy(namespaceDetails);
