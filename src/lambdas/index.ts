@@ -1,1 +1,8 @@
-export { namespaceDetails, navigate, shorten, stats, update } from './shortner';
+export {
+  namespaceDetails,
+  navigate,
+  shorten,
+  shortenMultiple,
+  stats,
+  update,
+} from './shortner';

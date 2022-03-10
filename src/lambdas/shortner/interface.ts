@@ -13,6 +13,9 @@ export interface URL {
   metadata?: any;
 }
 
+export interface URLS {
+  urls: URL[];
+}
 export interface URLStats {
   namespace: string;
   short: string;
@@ -42,7 +45,7 @@ export const URLEntity = new Entity<URL>({
     },
     metadata: {
       type: 'map',
-      default: {},
+      required: false,
     },
   },
 

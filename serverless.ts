@@ -4,6 +4,7 @@ import {
   namespaceDetails,
   navigate,
   shorten,
+  shortenMultiple,
   stats,
   update,
 } from './src/lambdas';
@@ -81,7 +82,14 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { shorten, navigate, stats, namespaceDetails, update },
+  functions: {
+    shorten,
+    navigate,
+    stats,
+    namespaceDetails,
+    update,
+    shortenMultiple,
+  },
   resources: {
     Resources: Table,
   },

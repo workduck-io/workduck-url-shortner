@@ -1,43 +1,66 @@
 export default {
-  $schema: 'http://json-schema.org/draft-07/schema#',
-  definitions: {
-    URL: {
-      properties: {
-        expiry: {
-          type: 'number',
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "URL": {
+            "properties": {
+                "expiry": {
+                    "type": "number"
+                },
+                "long": {
+                    "type": "string"
+                },
+                "metadata": {
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "short": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "long"
+            ],
+            "type": "object"
         },
-        long: {
-          type: 'string',
+        "URLS": {
+            "properties": {
+                "urls": {
+                    "items": {
+                        "$ref": "#/definitions/URL"
+                    },
+                    "type": "array"
+                }
+            },
+            "required": [
+                "urls"
+            ],
+            "type": "object"
         },
-        metadata: {},
-        namespace: {
-          type: 'string',
-        },
-        short: {
-          type: 'string',
-        },
-      },
-      required: ['long'],
-      type: 'object',
-    },
-    URLStats: {
-      properties: {
-        count: {
-          type: 'number',
-        },
-        long: {
-          type: 'string',
-        },
-        metadata: {},
-        namespace: {
-          type: 'string',
-        },
-        short: {
-          type: 'string',
-        },
-      },
-      required: ['count', 'long', 'namespace', 'short'],
-      type: 'object',
-    },
-  },
+        "URLStats": {
+            "properties": {
+                "count": {
+                    "type": "number"
+                },
+                "long": {
+                    "type": "string"
+                },
+                "metadata": {
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "short": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "count",
+                "long",
+                "namespace",
+                "short"
+            ],
+            "type": "object"
+        }
+    }
 } as const;

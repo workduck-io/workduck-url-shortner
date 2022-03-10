@@ -4,9 +4,10 @@ import { middyfy } from '@libs/lambda';
 import schema from '@resources/models';
 import 'source-map-support/register';
 import { KEYWORDS } from '../../utils/consts';
-import { URL, URLEntity, URLStatsEntity } from './interface';
 import { loadingPage } from '../../utils/loader';
+import { URL, URLEntity, URLStatsEntity } from './interface';
 const URLSchema = schema.definitions.URL;
+const URLSSchema = schema.definitions.URLS;
 const shorten: ValidatedEventAPIGatewayProxyEvent<
   typeof URLSchema
 > = async event => {
@@ -45,6 +46,46 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
       500
     );
   }
+};
+
+const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
+  typeof URLSSchema
+> = async event => {
+  const urls = event.body.urls as URL[];
+  const promises = urls.map(async url => {
+    if (KEYWORDS.includes(url.namespace) || KEYWORDS.includes(url.short)) {
+      throw new Error('Invalid namespace or alias');
+    }
+    try {
+      const url_data = await URLEntity.update(url, {
+        returnValues: 'all_new',
+        conditions: [
+          {
+            attr: 'short',
+            exists: false,
+          },
+        ],
+      });
+      const data = (url_data as any).Attributes as URL;
+      return {
+        [url.short]: `https://url.workduck.io/link/${data.namespace}/${data.short}`,
+      };
+    } catch (e) {
+      throw new Error(
+        JSON.stringify({
+          [url.short]: 'Cannot create URL',
+        })
+      );
+    }
+  });
+  const results = await Promise.allSettled(promises);
+
+  const success: any = results.filter(result => result.status === 'fulfilled');
+  const failed: any = results.filter(result => result.status === 'rejected');
+  return formatJSONResponse({
+    success: success.map(result => result.value),
+    failed: failed.map(result => JSON.parse(result.reason.message)),
+  });
 };
 
 const update: ValidatedEventAPIGatewayProxyEvent<
@@ -158,6 +199,7 @@ const namespaceDetails: ValidatedEventAPIGatewayProxyEvent<
   }
 };
 export const shorten_main = middyfy(shorten, URLSchema);
+export const shortenMultiple_main = middyfy(shortenMultiple);
 export const navigate_main = middyfy(navigate);
 export const stats_main = middyfy(stats);
 export const namespaceDetails_main = middyfy(namespaceDetails);

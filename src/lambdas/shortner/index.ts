@@ -13,6 +13,19 @@ export const shorten = {
   ],
 };
 
+export const shortenMultiple = {
+  handler: `${handlerPath(__dirname)}/handler.shortenMultiple_main`,
+  events: [
+    {
+      httpApi: {
+        method: 'POST',
+        path: '/shorten/multiple',
+        authorizer: 'workduckAuthorizer',
+      },
+    },
+  ],
+};
+
 export const update = {
   handler: `${handlerPath(__dirname)}/handler.update_main`,
   events: [
