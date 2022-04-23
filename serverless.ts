@@ -11,7 +11,7 @@ import {
 
 const serverlessConfiguration: AWS = {
   service: 'mex-integration',
-  frameworkVersion: '2',
+  frameworkVersion: '3',
   plugins: [
     'serverless-dynamodb-local',
     'serverless-esbuild',
@@ -43,7 +43,7 @@ const serverlessConfiguration: AWS = {
               '',
               [
                 'https://cognito-idp.',
-                '${opt:region, self:provider.region}',
+                '${aws:region}',
                 '.amazonaws.com/',
                 'us-east-1_Zu7FAh7hj',
               ],
