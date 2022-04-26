@@ -75,7 +75,7 @@ const serverlessConfiguration: AWS = {
               'dynamodb:BatchWriteItem',
               'dynamodb:BatchGetItem',
             ],
-            Resource: 'arn:aws:dynamodb:us-east-1:*:*',
+            Resource: 'arn:aws:dynamodb:us-east-1:418506370286:table/*',
           },
         ],
       },
