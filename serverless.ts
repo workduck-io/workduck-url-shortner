@@ -76,7 +76,7 @@ const serverlessConfiguration: AWS = {
               'dynamodb:BatchGetItem',
             ],
             Resource:
-              'arn:aws:dynamodb:us-east-1:418506370286:table/*-${sls:stage}',
+              'arn:aws:dynamodb:us-east-1:418506370286:table/url-store-*',
           },
         ],
       },
