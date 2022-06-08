@@ -5,7 +5,8 @@ import schema from '@resources/models';
 import 'source-map-support/register';
 import { KEYWORDS } from '../../utils/consts';
 import { loadingPage } from '../../utils/loader';
-import { URL, URLEntity, URLStatsEntity } from './interface';
+import { URL } from './interface';
+import { URLEntity, URLStatsEntity } from './entities';
 const URLSchema = schema.definitions.URL;
 const URLSSchema = schema.definitions.URLS;
 const shorten: ValidatedEventAPIGatewayProxyEvent<
@@ -54,7 +55,7 @@ const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
   const urls = event.body.urls as URL[];
   const promises = urls.map(async url => {
     if (KEYWORDS.includes(url.namespace) || KEYWORDS.includes(url.short)) {
-      throw new Error('Invalid namespace or alias');
+      throw new Error(JSON.stringify({ error: 'Invalid namespace or alias' }));
     }
     try {
       const url_data = await URLEntity.update(url, {

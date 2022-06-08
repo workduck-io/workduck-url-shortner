@@ -1,5 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx run-s types:*
+npx run-s --npm-path npm types:*
 npx pretty-quick --staged-only
