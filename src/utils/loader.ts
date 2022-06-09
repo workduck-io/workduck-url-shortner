@@ -10,7 +10,7 @@ export const loadingPage = (url: string, metadata?: any) => `<!DOCTYPE html>
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://metatags.io/">
+        <meta property="og:url" content="${url}">
         <meta property="og:title" content="${metadata?.title ?? 'Workduck'}">
         <meta property="og:description" content="${
           metadata?.description ?? 'Shortened link'
@@ -19,7 +19,7 @@ export const loadingPage = (url: string, metadata?: any) => `<!DOCTYPE html>
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="https://metatags.io/">
+        <meta property="twitter:url" content="${url}">
         <meta property="twitter:title" content="${
           metadata?.title ?? 'Workduck'
         }">
