@@ -3,9 +3,10 @@ import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import schema from '@resources/models';
 import 'source-map-support/register';
-import { KEYWORDS } from '../../utils/consts';
+import { BASE_URL, KEYWORDS } from '../../utils/consts';
 import { loadingPage } from '../../utils/loader';
-import { URL, URLEntity, URLStatsEntity } from './interface';
+import { URL } from './interface';
+import { URLEntity, URLStatsEntity } from './entities';
 const URLSchema = schema.definitions.URL;
 const URLSSchema = schema.definitions.URLS;
 const shorten: ValidatedEventAPIGatewayProxyEvent<
@@ -34,7 +35,7 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
     });
     const data = (url_data as any).Attributes as URL;
     return formatJSONResponse({
-      message: `https://url.workduck.io/link/${data.namespace}/${data.short}`,
+      message: `${BASE_URL}/${data.namespace}/${data.short}`,
     });
   } catch (e) {
     console.error({ e });
@@ -54,7 +55,7 @@ const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
   const urls = event.body.urls as URL[];
   const promises = urls.map(async url => {
     if (KEYWORDS.includes(url.namespace) || KEYWORDS.includes(url.short)) {
-      throw new Error('Invalid namespace or alias');
+      throw new Error(JSON.stringify({ error: 'Invalid namespace or alias' }));
     }
     try {
       const url_data = await URLEntity.update(url, {
@@ -68,7 +69,7 @@ const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
       });
       const data = (url_data as any).Attributes as URL;
       return {
-        [url.short]: `https://url.workduck.io/link/${data.namespace}/${data.short}`,
+        [url.short]: `${BASE_URL}/${data.namespace}/${data.short}`,
       };
     } catch (e) {
       throw new Error(
@@ -103,7 +104,7 @@ const update: ValidatedEventAPIGatewayProxyEvent<
     });
     const data = (url_data as any).Attributes as URL;
     return formatJSONResponse({
-      message: `https://url.workduck.io/link/${data.namespace}/${data.short}`,
+      message: `${BASE_URL}/${data.namespace}/${data.short}`,
     });
   } catch (e) {
     console.error({ e });
@@ -140,7 +141,7 @@ const navigate: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
           headers: {
             'Content-Type': 'text/html',
           },
-          body: loadingPage(data.long),
+          body: loadingPage(data.long, data.metadata),
         };
     } else
       return {

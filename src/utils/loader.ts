@@ -1,7 +1,32 @@
-export const loadingPage = (url: string) => `<!DOCTYPE html>
+export const loadingPage = (url: string, metadata?: any) => `<!DOCTYPE html>
 <html lang="en">
      <head>
-          <title>Mex - Workduck</title>
+        <!-- Primary Meta Tags -->
+        <title>Mex - ${metadata?.title ?? 'Workduck'}</title>
+        <meta name="title" content="${metadata?.title ?? 'Workduck'}">
+        <meta name="description" content="${
+          metadata?.description ?? 'Shortened link'
+        }">
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="${url}">
+        <meta property="og:title" content="${metadata?.title ?? 'Workduck'}">
+        <meta property="og:description" content="${
+          metadata?.description ?? 'Shortened link'
+        }">
+        <meta property="og:image" content="${metadata?.image ?? ''}">
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="${url}">
+        <meta property="twitter:title" content="${
+          metadata?.title ?? 'Workduck'
+        }">
+        <meta property="twitter:description" content="${
+          metadata?.description ?? 'Shortened link'
+        }">
+        <meta property="twitter:image" content="${metadata?.image ?? ''}">
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <link href="css/style.css" rel="stylesheet">

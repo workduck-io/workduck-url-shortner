@@ -33,3 +33,7 @@ export const DEFAULT_NAMESPACE = 'ROOT';
 
 export const KEYWORDS = ['update', 'shorten', 'stats'];
 
+export const BASE_URL =
+  process.env.stageEnv === 'local'
+    ? 'http://localhost:4000'
+    : 'https://url.workduck.io/link';
