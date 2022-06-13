@@ -2,7 +2,6 @@ name: Build and Publish the Package
 on:
   push:
     branches:
-      - mukul-wd-1352-task-github-actions-for-automated
       - main
 
 jobs:
