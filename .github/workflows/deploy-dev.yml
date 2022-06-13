@@ -1,0 +1,23 @@
+name: Build and Publish the Package
+on:
+  push:
+    branches:
+      - mukul-wd-1352-task-github-actions-for-automated
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      YARN_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          always-auth: true
+          node-version: "16.x"
+      - run: npm install -g yarn
+      - run: yarn --no-default-rc
+      - run: yarn sls deploy --stage=dev
