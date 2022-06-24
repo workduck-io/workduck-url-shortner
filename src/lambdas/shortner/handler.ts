@@ -21,7 +21,7 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
         {
           error: 'Invalid namespace or alias',
         },
-        500
+        400
       );
     }
     const url_data = await URLEntity.update(event.body, {
@@ -44,7 +44,7 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
         errorMessage: e.message,
         message: 'URL already exists',
       },
-      500
+      400
     );
   }
 };
@@ -113,7 +113,7 @@ const update: ValidatedEventAPIGatewayProxyEvent<
         errorMessage: e.message,
         message: 'URL doesnt exist',
       },
-      500
+      400
     );
   }
 };
