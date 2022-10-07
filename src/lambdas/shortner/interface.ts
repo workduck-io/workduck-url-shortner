@@ -1,7 +1,7 @@
 export interface URL {
   workspace?: string;
   url: string;
-  alias: string;
+  alias?: string;
   expiry?: number;
   properties?: any;
   tags?: string[];

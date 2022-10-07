@@ -25,7 +25,6 @@ export default {
                 }
             },
             "required": [
-                "alias",
                 "url"
             ],
             "type": "object"
