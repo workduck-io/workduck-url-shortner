@@ -1,11 +1,11 @@
 import type { AWS } from '@serverless/typescript';
 import Table from './infra/dynamodb/single-table';
 import {
+  del,
   navigate,
   shorten,
   shortenMultiple,
   stats,
-  update,
   workspaceDetails,
 } from './src/lambdas';
 
@@ -96,7 +96,7 @@ const serverlessConfiguration: AWS = {
     navigate,
     stats,
     workspaceDetails,
-    update,
+    del,
     shortenMultiple,
   },
   resources: {
@@ -112,7 +112,7 @@ const serverlessConfiguration: AWS = {
     },
     customDomain: {
       http: {
-        domainName: 'url.workduck.io',
+        domainName: 'url-${opt:stage, self:provider.stage}.workduck.io',
         basePath: 'link',
         stage: '${opt:stage, self:provider.stage}',
         createRoute53Record: true,

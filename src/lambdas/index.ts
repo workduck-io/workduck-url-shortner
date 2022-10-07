@@ -1,8 +1,8 @@
 export {
+  del,
   navigate,
   shorten,
   shortenMultiple,
   stats,
-  update,
   workspaceDetails,
 } from './shortner';

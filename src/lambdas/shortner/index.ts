@@ -57,7 +57,20 @@ export const stats = {
     {
       httpApi: {
         method: 'GET',
-        path: '/{workspace}/{alias}/stats',
+        path: '/{workspace}/stats/{url}',
+        authorizer: 'workduckAuthorizer',
+      },
+    },
+  ],
+};
+
+export const del = {
+  handler: `${handlerPath(__dirname)}/handler.delete_main`,
+  events: [
+    {
+      httpApi: {
+        method: 'DELETE',
+        path: '/{workspace}/stats/{url}',
         authorizer: 'workduckAuthorizer',
       },
     },

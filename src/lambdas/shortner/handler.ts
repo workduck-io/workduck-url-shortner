@@ -27,25 +27,23 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
         400
       );
     }
-    const existingalias = (
-      await URLEntity.query(event.body.workspace, {
-        index: 'pk-ak-index',
-        eq: event.body.alias,
-      })
-    ).Items;
-    if (existingalias && existingalias.length > 0)
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ message: `${event.body.alias} already exists` }),
-      };
+    if (event.body.alias) {
+      const existingalias = (
+        await URLEntity.query(event.body.workspace, {
+          index: 'pk-ak-index',
+          eq: event.body.alias,
+        })
+      ).Items;
+      if (existingalias && existingalias.length > 0)
+        return {
+          statusCode: 400,
+          body: JSON.stringify({
+            message: `${event.body.alias} already exists`,
+          }),
+        };
+    }
     const url_data = await URLEntity.update(event.body, {
       returnValues: 'ALL_NEW',
-      conditions: [
-        {
-          attr: 'alias',
-          ne: event.body.alias,
-        },
-      ],
     });
     const data = url_data.Attributes;
     return formatJSONResponse({
@@ -73,14 +71,16 @@ const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
       throw new Error(JSON.stringify({ error: 'Invalid workspace or alias' }));
     }
     try {
-      const existingalias = (
-        await URLEntity.query(url.workspace, {
-          index: 'pk-ak-index',
-          eq: url.alias as string,
-        })
-      ).Items;
-      if (existingalias && existingalias.length > 0)
-        throw new Error('Alias exists');
+      if (url.alias) {
+        const existingalias = (
+          await URLEntity.query(url.workspace, {
+            index: 'pk-ak-index',
+            eq: url.alias as string,
+          })
+        ).Items;
+        if (existingalias && existingalias.length > 0)
+          throw new Error('Alias exists');
+      }
       const url_data = await URLEntity.update(url, {
         returnValues: 'ALL_NEW',
       });
@@ -162,7 +162,23 @@ const stats: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
     urlHash: md5(event.pathParameters.workspace + event.pathParameters.url),
     workspace: event.pathParameters.workspace,
   });
-  return formatJSONResponse(url_stats.Item);
+  const url_links = await URLEntity.get({
+    urlHash: md5(event.pathParameters.workspace + event.pathParameters.url),
+    workspace: event.pathParameters.workspace,
+  });
+  return formatJSONResponse({ URL_STATS: url_stats.Item, URL: url_links.Item });
+};
+
+const del: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
+  await URLStatsEntity.delete({
+    urlHash: md5(event.pathParameters.workspace + event.pathParameters.url),
+    workspace: event.pathParameters.workspace,
+  });
+  await URLEntity.delete({
+    urlHash: md5(event.pathParameters.workspace + event.pathParameters.url),
+    workspace: event.pathParameters.workspace,
+  });
+  return formatJSONResponse({ message: 'Successfully deleted' });
 };
 
 const workspaceDetails: ValidatedEventAPIGatewayProxyEvent<
@@ -194,6 +210,7 @@ const workspaceDetails: ValidatedEventAPIGatewayProxyEvent<
 };
 export const shorten_main = middyfy(shorten, URLSchema);
 export const shortenMultiple_main = middyfy(shortenMultiple);
+export const delete_main = middyfy(del);
 export const navigate_main = middyfy(navigate);
 export const stats_main = middyfy(stats);
 export const workspaceDetails_main = middyfy(workspaceDetails);
