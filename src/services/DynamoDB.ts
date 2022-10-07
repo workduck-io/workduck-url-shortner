@@ -18,8 +18,8 @@ export const MyTable = new Table({
   partitionKey: 'pk',
   sortKey: 'sk',
   indexes: {
-    'reverse-index': {
-      partitionKey: 'sk',
+    'pk-ak-index': {
+      partitionKey: 'pk',
       sortKey: 'ak',
     },
   },

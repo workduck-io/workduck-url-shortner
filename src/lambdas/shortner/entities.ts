@@ -1,32 +1,36 @@
 import { Entity } from 'dynamodb-toolbox';
-import { nanoid } from 'nanoid';
+import md5 from 'md5';
 import { MyTable } from '../../services/DynamoDB';
-import {
-  DEFAULT_NAMESPACE,
-  DEFAULT_SHORT_URL_LENGTH,
-} from '../../utils/consts';
-import { URL, URLStats } from './interface';
+import { DEFAULT_NAMESPACE } from '../../utils/consts';
 
-export const URLEntity = new Entity<URL>({
+export const URLEntity = new Entity({
   name: 'URL',
 
   // Define attributes
   attributes: {
-    namespace: {
+    workspace: {
       partitionKey: true,
       default: () => DEFAULT_NAMESPACE,
     },
-    short: {
+    urlHash: {
       sortKey: true,
-      default: () => nanoid(DEFAULT_SHORT_URL_LENGTH),
+      default: data => md5(data.workspace + data.url),
       prefix: 'LINK_',
+      hidden: true,
     },
-    long: { required: true, type: 'string', map: 'ak' },
+    alias: { required: true, type: 'string', map: 'ak' },
+    url: {
+      type: 'string',
+    },
     expiry: {
       type: 'number',
       default: () => Date.now() + 1000 * 60 * 60 * 24 * 365,
     },
-    metadata: {
+    tags: {
+      type: 'set',
+      setType: 'string',
+    },
+    properties: {
       type: 'map',
       required: false,
     },
@@ -36,19 +40,30 @@ export const URLEntity = new Entity<URL>({
   table: MyTable,
 });
 
-export const URLStatsEntity = new Entity<URLStats>({
+export const URLStatsEntity = new Entity({
   name: 'URL_STATS',
 
   // Define attributes
   attributes: {
-    namespace: {
+    workspace: {
       partitionKey: true,
+      default: () => DEFAULT_NAMESPACE,
     },
-    short: { sortKey: true, prefix: 'STATS_' },
-    long: { required: true, type: 'string', map: 'ak' },
+    urlHash: {
+      sortKey: true,
+      default: data => md5(data.workspace + data.url),
+      prefix: 'STATS_',
+      hidden: true,
+    },
+    url: {
+      type: 'string',
+    },
     count: {
       type: 'number',
       default: () => 0,
+    },
+    metadata: {
+      type: 'map',
     },
   },
 

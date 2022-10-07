@@ -1,16 +1,16 @@
 import type { AWS } from '@serverless/typescript';
 import Table from './infra/dynamodb/single-table';
 import {
-  namespaceDetails,
   navigate,
   shorten,
   shortenMultiple,
   stats,
   update,
+  workspaceDetails,
 } from './src/lambdas';
 
 const serverlessConfiguration: AWS = {
-  service: 'mex-integration',
+  service: 'mex-url-shortner',
   frameworkVersion: '3',
   plugins: [
     'serverless-dynamodb-local',
@@ -32,7 +32,6 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
-    lambdaHashingVersion: '20201221',
     httpApi: {
       disableDefaultEndpoint: true,
       authorizers: {
@@ -64,17 +63,13 @@ const serverlessConfiguration: AWS = {
           'X-Amzn-Trace-Id',
           'mex-workspace-id',
           'wd-request-id',
+          'mex-api-ver',
         ],
       },
     },
     iam: {
       role: {
         statements: [
-          // {
-          //   Effect: 'Allow',
-          //   Action: ['lambda:InvokeFunction'],
-          //   Resource: ['*'],
-          // },
           {
             Effect: 'Allow',
             Action: [
@@ -100,7 +95,7 @@ const serverlessConfiguration: AWS = {
     shorten,
     navigate,
     stats,
-    namespaceDetails,
+    workspaceDetails,
     update,
     shortenMultiple,
   },
@@ -137,7 +132,7 @@ const serverlessConfiguration: AWS = {
       concurrency: 10,
     },
     dynamodb: {
-      stages: ['local'],
+      stages: ['local', 'dev'],
       start: {
         port: 8000,
         convertEmptyValues: true,

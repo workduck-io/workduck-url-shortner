@@ -45,7 +45,7 @@ export const navigate = {
     {
       httpApi: {
         method: 'GET',
-        path: '/{namespace}/{short}',
+        path: '/{workspace}/{alias}',
       },
     },
   ],
@@ -57,20 +57,20 @@ export const stats = {
     {
       httpApi: {
         method: 'GET',
-        path: '/{namespace}/{short}/stats',
+        path: '/{workspace}/{alias}/stats',
         authorizer: 'workduckAuthorizer',
       },
     },
   ],
 };
 
-export const namespaceDetails = {
-  handler: `${handlerPath(__dirname)}/handler.namespaceDetails_main`,
+export const workspaceDetails = {
+  handler: `${handlerPath(__dirname)}/handler.workspaceDetails_main`,
   events: [
     {
       httpApi: {
         method: 'GET',
-        path: '/{namespace}/stats',
+        path: '/{workspace}/stats',
         authorizer: 'workduckAuthorizer',
       },
     },

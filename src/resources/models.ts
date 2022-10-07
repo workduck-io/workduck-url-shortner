@@ -3,23 +3,30 @@ export default {
     "definitions": {
         "URL": {
             "properties": {
+                "alias": {
+                    "type": "string"
+                },
                 "expiry": {
                     "type": "number"
                 },
-                "long": {
+                "properties": {
+                },
+                "tags": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "url": {
                     "type": "string"
                 },
-                "metadata": {
-                },
-                "namespace": {
-                    "type": "string"
-                },
-                "short": {
+                "workspace": {
                     "type": "string"
                 }
             },
             "required": [
-                "long"
+                "alias",
+                "url"
             ],
             "type": "object"
         },
@@ -42,23 +49,19 @@ export default {
                 "count": {
                     "type": "number"
                 },
-                "long": {
-                    "type": "string"
-                },
                 "metadata": {
                 },
-                "namespace": {
+                "url": {
                     "type": "string"
                 },
-                "short": {
+                "workspace": {
                     "type": "string"
                 }
             },
             "required": [
                 "count",
-                "long",
-                "namespace",
-                "short"
+                "url",
+                "workspace"
             ],
             "type": "object"
         }
