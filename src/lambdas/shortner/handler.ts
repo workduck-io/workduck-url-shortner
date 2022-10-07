@@ -2,7 +2,6 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/apiGateway';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 import schema from '@resources/models';
-import md5 from 'md5';
 import 'source-map-support/register';
 import { BASE_URL, KEYWORDS } from '../../utils/consts';
 import { loadingPage } from '../../utils/loader';
@@ -30,6 +29,12 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
         await URLEntity.query(workspace, {
           index: 'pk-ak-index',
           eq: event.body.alias,
+          filters: [
+            {
+              attr: 'url',
+              ne: event.body.url,
+            },
+          ],
         })
       ).Items;
       if (existingalias && existingalias.length > 0)
@@ -74,7 +79,13 @@ const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
         const existingalias = (
           await URLEntity.query(workspace, {
             index: 'pk-ak-index',
-            eq: url.alias as string,
+            eq: event.body.alias as string,
+            filters: [
+              {
+                attr: 'url',
+                ne: event.body.url as string,
+              },
+            ],
           })
         ).Items;
         if (existingalias && existingalias.length > 0)
@@ -158,28 +169,40 @@ const navigate: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
 
 const stats: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
   const workspace = extractWorkspaceId(event);
+  const urlHash = event.pathParameters.url;
+  console.log(urlHash);
+
   const url_stats = await URLStatsEntity.get({
-    urlHash: md5(workspace + event.pathParameters.url),
+    urlHash,
     workspace: workspace,
   });
   const url_links = await URLEntity.get({
-    urlHash: md5(workspace + event.pathParameters.url),
+    urlHash,
     workspace: workspace,
   });
   return formatJSONResponse({ URL_STATS: url_stats.Item, URL: url_links.Item });
 };
 
 const del: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
+  const urlHash = event.pathParameters.url;
+  console.log(urlHash);
   const workspace = extractWorkspaceId(event);
-  await URLStatsEntity.delete({
-    urlHash: md5(workspace + event.pathParameters.url),
-    workspace: workspace,
-  });
-  await URLEntity.delete({
-    urlHash: md5(workspace + event.pathParameters.url),
-    workspace: workspace,
-  });
-  return formatJSONResponse({ message: 'Successfully deleted' });
+  try {
+    await URLStatsEntity.delete({
+      urlHash,
+      workspace: workspace,
+    });
+    await URLEntity.delete({
+      urlHash,
+      workspace: workspace,
+    });
+    return formatJSONResponse({ message: 'Successfully deleted' });
+  } catch (e) {
+    return {
+      statusCode: 400,
+      message: 'Could not delete',
+    };
+  }
 };
 
 const workspaceDetails: ValidatedEventAPIGatewayProxyEvent<
