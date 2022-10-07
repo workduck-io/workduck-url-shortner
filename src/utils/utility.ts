@@ -8,3 +8,7 @@ export const groupBy = function (xs, key) {
     return rv;
   }, {});
 };
+
+export const extractWorkspaceId = event => {
+  return event.headers['mex-workspace-id'];
+};

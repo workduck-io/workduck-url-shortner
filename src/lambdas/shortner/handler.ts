@@ -6,7 +6,7 @@ import md5 from 'md5';
 import 'source-map-support/register';
 import { BASE_URL, KEYWORDS } from '../../utils/consts';
 import { loadingPage } from '../../utils/loader';
-import { groupBy } from '../../utils/utility';
+import { extractWorkspaceId, groupBy } from '../../utils/utility';
 import { URLEntity, URLStatsEntity } from './entities';
 import { URL } from './interface';
 
@@ -16,10 +16,8 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
   typeof URLSchema
 > = async event => {
   try {
-    if (
-      KEYWORDS.includes(event.body.workspace) ||
-      KEYWORDS.includes(event.body.alias)
-    ) {
+    const workspace = extractWorkspaceId(event);
+    if (KEYWORDS.includes(workspace) || KEYWORDS.includes(event.body.alias)) {
       return formatJSONResponse(
         {
           error: 'Invalid workspace or alias',
@@ -29,7 +27,7 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
     }
     if (event.body.alias) {
       const existingalias = (
-        await URLEntity.query(event.body.workspace, {
+        await URLEntity.query(workspace, {
           index: 'pk-ak-index',
           eq: event.body.alias,
         })
@@ -65,15 +63,16 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
 const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
   typeof URLSSchema
 > = async event => {
+  const workspace = extractWorkspaceId(event);
   const urls = event.body.urls as URL[];
   const promises = urls.map(async url => {
-    if (KEYWORDS.includes(url.workspace) || KEYWORDS.includes(url.alias)) {
+    if (KEYWORDS.includes(workspace) || KEYWORDS.includes(url.alias)) {
       throw new Error(JSON.stringify({ error: 'Invalid workspace or alias' }));
     }
     try {
       if (url.alias) {
         const existingalias = (
-          await URLEntity.query(url.workspace, {
+          await URLEntity.query(workspace, {
             index: 'pk-ak-index',
             eq: url.alias as string,
           })
@@ -158,25 +157,27 @@ const navigate: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
 };
 
 const stats: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
+  const workspace = extractWorkspaceId(event);
   const url_stats = await URLStatsEntity.get({
-    urlHash: md5(event.pathParameters.workspace + event.pathParameters.url),
-    workspace: event.pathParameters.workspace,
+    urlHash: md5(workspace + event.pathParameters.url),
+    workspace: workspace,
   });
   const url_links = await URLEntity.get({
-    urlHash: md5(event.pathParameters.workspace + event.pathParameters.url),
-    workspace: event.pathParameters.workspace,
+    urlHash: md5(workspace + event.pathParameters.url),
+    workspace: workspace,
   });
   return formatJSONResponse({ URL_STATS: url_stats.Item, URL: url_links.Item });
 };
 
 const del: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
+  const workspace = extractWorkspaceId(event);
   await URLStatsEntity.delete({
-    urlHash: md5(event.pathParameters.workspace + event.pathParameters.url),
-    workspace: event.pathParameters.workspace,
+    urlHash: md5(workspace + event.pathParameters.url),
+    workspace: workspace,
   });
   await URLEntity.delete({
-    urlHash: md5(event.pathParameters.workspace + event.pathParameters.url),
-    workspace: event.pathParameters.workspace,
+    urlHash: md5(workspace + event.pathParameters.url),
+    workspace: workspace,
   });
   return formatJSONResponse({ message: 'Successfully deleted' });
 };
@@ -184,33 +185,26 @@ const del: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
 const workspaceDetails: ValidatedEventAPIGatewayProxyEvent<
   undefined
 > = async event => {
+  const workspace = extractWorkspaceId(event);
   switch (event.queryStringParameters?.details) {
     case 'stats':
-      const url_stats = await URLStatsEntity.query(
-        event.pathParameters.workspace,
-        {
-          beginsWith: 'STATS_',
-        }
-      );
+      const url_stats = await URLStatsEntity.query(workspace, {
+        beginsWith: 'STATS_',
+      });
       return formatJSONResponse({ URL_STATS: url_stats.Items });
     case 'links':
-      const url_links = await URLStatsEntity.query(
-        event.pathParameters.workspace,
-        {
-          beginsWith: 'LINK_',
-        }
-      );
+      const url_links = await URLStatsEntity.query(workspace, {
+        beginsWith: 'LINK_',
+      });
       return formatJSONResponse({ URL: url_links.Items });
     default:
-      const url_details = await URLStatsEntity.query(
-        event.pathParameters.workspace
-      );
+      const url_details = await URLStatsEntity.query(workspace);
       return formatJSONResponse(groupBy(url_details.Items, 'entity'));
   }
 };
 export const shorten_main = middyfy(shorten, URLSchema);
 export const shortenMultiple_main = middyfy(shortenMultiple);
 export const delete_main = middyfy(del);
-export const navigate_main = middyfy(navigate);
+export const navigate_main = navigate;
 export const stats_main = middyfy(stats);
 export const workspaceDetails_main = middyfy(workspaceDetails);
