@@ -1,4 +1,4 @@
-name: Build and Publish the Package
+name: Build and Deploy to All 3 Stages
 on:
   push:
     branches:
@@ -20,3 +20,5 @@ jobs:
       - run: npm install -g yarn
       - run: yarn --no-default-rc
       - run: yarn sls deploy --stage=dev
+      - run: yarn sls deploy --stage=test
+      - run: yarn sls deploy --stage=staging
