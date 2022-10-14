@@ -45,12 +45,14 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
           }),
         };
     }
-    const url_data = await URLEntity.update(event.body, {
-      returnValues: 'ALL_NEW',
-    });
+    const url_data = await URLEntity.update(
+      { ...event.body, workspace: workspace },
+      {
+        returnValues: 'ALL_NEW',
+      }
+    );
     const data = url_data.Attributes;
     return formatJSONResponse({
-      //@ts-ignore
       message: `${BASE_URL}/${data.workspace}/${data.alias}`,
     });
   } catch (e) {
@@ -91,9 +93,12 @@ const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
         if (existingalias && existingalias.length > 0)
           throw new Error('Alias exists');
       }
-      const url_data = await URLEntity.update(url, {
-        returnValues: 'ALL_NEW',
-      });
+      const url_data = await URLEntity.update(
+        { ...url, workspace: workspace },
+        {
+          returnValues: 'ALL_NEW',
+        }
+      );
       const data = url_data.Attributes;
       return {
         [url.alias]: `${BASE_URL}/${data.workspace}/${data.alias}`,
