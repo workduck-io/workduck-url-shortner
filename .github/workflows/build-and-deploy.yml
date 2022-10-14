@@ -18,7 +18,7 @@ jobs:
           always-auth: true
           node-version: "16.x"
       - run: npm install -g yarn
-      - run: yarn --no-default-rc
+      - run: yarn
       - run: yarn sls deploy --stage=dev
       - run: yarn sls deploy --stage=test
       - run: yarn sls deploy --stage=staging
