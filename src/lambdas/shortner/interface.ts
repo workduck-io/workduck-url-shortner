@@ -1,18 +1,18 @@
 export interface URL {
-  namespace?: string;
-  short?: string;
-  long: string;
+  workspace?: string;
+  url: string;
+  alias?: string;
   expiry?: number;
-  metadata?: any;
+  properties?: any;
+  tags?: string[];
 }
 
 export interface URLS {
   urls: URL[];
 }
 export interface URLStats {
-  namespace: string;
-  short: string;
-  long: string;
+  workspace: string;
+  url: string;
   count: number;
   metadata?: any;
 }
