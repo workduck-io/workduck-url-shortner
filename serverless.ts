@@ -110,9 +110,14 @@ const serverlessConfiguration: AWS = {
       noAuth: true,
       ignoreJWTSignature: true,
     },
+    domainMaps: {
+      test: 'url.workduck.io',
+      staging: 'url-staging.workduck.io',
+    },
     customDomain: {
       http: {
-        domainName: 'url-${opt:stage, self:provider.stage}.workduck.io',
+        domainName:
+          '${self:custom.domainMaps.${opt:stage, self:provider.stage}}',
         basePath: 'link',
         stage: '${opt:stage, self:provider.stage}',
         createRoute53Record: true,

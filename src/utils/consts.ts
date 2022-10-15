@@ -37,5 +37,5 @@ export const BASE_URL =
   process.env.stageEnv === 'local'
     ? 'http://localhost:4000'
     : `https://url${
-        process.env.stageEnv === 'dev' ? '' : '-' + process.env.stageEnv
+        process.env.stageEnv === 'test' ? '' : '-' + process.env.stageEnv
       }.workduck.io/link`;
