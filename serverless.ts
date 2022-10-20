@@ -1,5 +1,8 @@
 import type { AWS } from '@serverless/typescript';
-import Table from './infra/dynamodb/single-table';
+import testStageTable from 'infra/dynamodb/test-stage-table';
+import stagingStageTable from 'infra/dynamodb/staging-stage-table';
+import prodStageTable from 'infra/dynamodb/prod-stage-table';
+import defaultTable from 'infra/dynamodb/default-table';
 import {
   del,
   navigate,
@@ -99,9 +102,6 @@ const serverlessConfiguration: AWS = {
     del,
     shortenMultiple,
   },
-  resources: {
-    Resources: Table,
-  },
   useDotenv: true,
   package: { individually: true },
   custom: {
@@ -146,6 +146,32 @@ const serverlessConfiguration: AWS = {
         migrate: true,
         dbPath: './dbMocks/',
       },
+    },
+  },
+  resources: {
+    Conditions: {
+      IsProd: {
+        'Fn::Equals': ["${opt:stage, 'local'}", 'prod'],
+      },
+      IsTest: {
+        'Fn::Equals': ["${opt:stage, 'local'}", 'test'],
+      },
+      IsStaging: {
+        'Fn::Equals': ["${opt:stage, 'local'}", 'staging'],
+      },
+      IsSomethingElse: {
+        'Fn::Not': [
+          {
+            Condition: 'IsProd' || 'IsStaging' || 'IsTest',
+          },
+        ],
+      },
+    },
+    Resources: {
+      ...testStageTable,
+      ...prodStageTable,
+      ...stagingStageTable,
+      ...defaultTable,
     },
   },
 };
