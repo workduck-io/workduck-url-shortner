@@ -18,7 +18,7 @@ export const URLEntity = new Entity({
       prefix: 'LINK_',
       hidden: true,
     },
-    alias: { required: true, type: 'string', map: 'ak' },
+    alias: { required: true, type: 'string', map: 'ak', coerce: false },
     url: {
       type: 'string',
     },
