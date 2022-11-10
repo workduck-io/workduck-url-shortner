@@ -46,15 +46,19 @@ const shorten: ValidatedEventAPIGatewayProxyEvent<
         };
     }
     const url_data = await URLEntity.update(
-      { ...event.body, workspace: workspace },
+      { ...event.body, workspace },
       {
         returnValues: 'ALL_NEW',
       }
     );
     const data = url_data.Attributes;
-    return formatJSONResponse({
-      message: `${BASE_URL}/${data.workspace}/${data.alias}`,
-    });
+    return formatJSONResponse(
+      data.alias
+        ? {
+            message: `${BASE_URL}/${data.workspace}/${data.alias}`,
+          }
+        : {}
+    );
   } catch (e) {
     console.error({ e });
     return formatJSONResponse(
@@ -94,7 +98,7 @@ const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
           throw new Error('Alias exists');
       }
       const url_data = await URLEntity.update(
-        { ...url, workspace: workspace },
+        { ...url, workspace },
         {
           returnValues: 'ALL_NEW',
         }
@@ -179,27 +183,26 @@ const stats: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
 
   const url_stats = await URLStatsEntity.get({
     urlHash,
-    workspace: workspace,
+    workspace,
   });
   const url_links = await URLEntity.get({
     urlHash,
-    workspace: workspace,
+    workspace,
   });
   return formatJSONResponse({ URL_STATS: url_stats.Item, URL: url_links.Item });
 };
 
 const del: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
   const urlHash = event.pathParameters.url;
-  console.log(urlHash);
   const workspace = extractWorkspaceId(event);
   try {
     await URLStatsEntity.delete({
       urlHash,
-      workspace: workspace,
+      workspace,
     });
     await URLEntity.delete({
       urlHash,
-      workspace: workspace,
+      workspace,
     });
     return formatJSONResponse({ message: 'Successfully deleted' });
   } catch (e) {
