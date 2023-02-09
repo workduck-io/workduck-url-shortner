@@ -47,11 +47,13 @@ const serverlessConfiguration: AWS = {
                 'https://cognito-idp.',
                 '${aws:region}',
                 '.amazonaws.com/',
-                'us-east-1_Zu7FAh7hj',
+                '${self:custom.cognitoPoolMaps.${opt:stage, self:provider.stage}}',
               ],
             ],
           },
-          audience: ['6pvqt64p0l2kqkk2qafgdh13qe'],
+          audience: [
+            '${self:custom.cognitoClientIDMaps.${opt:stage, self:provider.stage}}',
+          ],
         },
       },
       cors: {
@@ -111,9 +113,22 @@ const serverlessConfiguration: AWS = {
       ignoreJWTSignature: true,
     },
     domainMaps: {
-      test: 'url.workduck.io',
-      staging: 'url-staging.workduck.io',
+      staging: 'url.workduck.io',
+      test: 'url-test.workduck.io',
     },
+    cognitoPoolMaps: {
+      dev: 'us-east-1_Zu7FAh7hj',
+      staging: 'us-east-1_Zu7FAh7hj',
+      test: 'us-east-1_O5YTlVrCd',
+      local: 'us-east-1_O5YTlVrCd',
+    },
+    cognitoClientIDMaps: {
+      dev: '6pvqt64p0l2kqkk2qafgdh13qe',
+      staging: '6pvqt64p0l2kqkk2qafgdh13qe',
+      test: '25qd6eq6vv3906osgv8v3f8c6v',
+      local: '25qd6eq6vv3906osgv8v3f8c6v',
+    },
+
     customDomain: {
       http: {
         domainName:
