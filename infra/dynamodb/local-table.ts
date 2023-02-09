@@ -1,7 +1,7 @@
 export default {
   defaultTable: {
     Type: 'AWS::DynamoDB::Table',
-    Condition: 'IsSomethingElse',
+    Condition: 'IsLocal',
     Properties: {
       TableName: "url-store-${opt:stage, 'local'}",
       AttributeDefinitions: [
