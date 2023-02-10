@@ -2,7 +2,6 @@ import type { AWS } from '@serverless/typescript';
 import testStageTable from 'infra/dynamodb/test-stage-table';
 import stagingStageTable from 'infra/dynamodb/staging-stage-table';
 import prodStageTable from 'infra/dynamodb/prod-stage-table';
-import defaultTable from 'infra/dynamodb/default-table';
 import {
   del,
   navigate,
@@ -11,6 +10,7 @@ import {
   stats,
   workspaceDetails,
 } from './src/lambdas';
+import localTable from './infra/dynamodb/local-table';
 
 const serverlessConfiguration: AWS = {
   service: 'mex-url-shortner',
@@ -174,19 +174,15 @@ const serverlessConfiguration: AWS = {
       IsStaging: {
         'Fn::Equals': ["${opt:stage, 'local'}", 'staging'],
       },
-      IsSomethingElse: {
-        'Fn::Not': [
-          {
-            Condition: 'IsProd' || 'IsStaging' || 'IsTest',
-          },
-        ],
+      IsLocal: {
+        'Fn::Equals': ["${opt:stage, 'local'}", 'local'],
       },
     },
     Resources: {
       ...testStageTable,
       ...prodStageTable,
       ...stagingStageTable,
-      ...defaultTable,
+      ...localTable,
     },
   },
 };
