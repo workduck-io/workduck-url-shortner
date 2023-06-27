@@ -10,7 +10,7 @@ const workduckWorkspaceValidatorMiddleware = () => {
   const workduckWorkspaceValidatorMiddlewareBefore = async request => {
     request.event.headers.Authorization = request.event.headers.authorization;
     try {
-      if (process.env.SLS_STAGE !== 'local' && !validate(request.event)) {
+      if (process.env.stageEnv !== 'local' && !validate(request.event)) {
         throw new Error('Workspace dont match');
       }
     } catch (cause) {

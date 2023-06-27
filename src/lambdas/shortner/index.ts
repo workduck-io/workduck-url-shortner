@@ -70,7 +70,7 @@ export const del = {
     {
       httpApi: {
         method: 'DELETE',
-        path: '/stats/{url}',
+        path: '/stats',
         authorizer: 'workduckAuthorizer',
       },
     },
