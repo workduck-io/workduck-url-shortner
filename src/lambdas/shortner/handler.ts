@@ -108,7 +108,7 @@ const shortenMultiple: ValidatedEventAPIGatewayProxyEvent<
         [url.alias]: `${BASE_URL}/${data.workspace}/${data.alias}`,
       };
     } catch (e) {
-      console.log(e);
+      console.error(e);
 
       throw new Error(
         JSON.stringify({
@@ -192,15 +192,15 @@ const stats: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
 };
 
 const del: ValidatedEventAPIGatewayProxyEvent<undefined> = async event => {
-  const link = event.queryStringParameters.url;
+  const url = event.queryStringParameters.url;
   const workspace = extractWorkspaceId(event);
   try {
     await URLStatsEntity.delete({
-      link,
+      url,
       workspace,
     });
     await URLEntity.delete({
-      link,
+      url,
       workspace,
     });
     return formatJSONResponse({ message: 'Successfully deleted' });
