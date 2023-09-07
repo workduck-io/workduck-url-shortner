@@ -23,7 +23,7 @@ const serverlessConfiguration: AWS = {
   ],
   provider: {
     name: 'aws',
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs18.x',
     stage: 'local',
     memorySize: 128,
     apiGateway: {
@@ -115,7 +115,7 @@ const serverlessConfiguration: AWS = {
     domainMaps: {
       staging: 'url.workduck.io',
       test: 'url-test.workduck.io',
-      local: 'localhost:4000'
+      local: 'localhost:4000',
     },
     cognitoPoolMaps: {
       dev: 'us-east-1_Zu7FAh7hj',
