@@ -1,7 +1,8 @@
 import type { AWS } from '@serverless/typescript';
-import testStageTable from 'infra/dynamodb/test-stage-table';
-import stagingStageTable from 'infra/dynamodb/staging-stage-table';
 import prodStageTable from 'infra/dynamodb/prod-stage-table';
+import stagingStageTable from 'infra/dynamodb/staging-stage-table';
+import testStageTable from 'infra/dynamodb/test-stage-table';
+import localTable from './infra/dynamodb/local-table';
 import {
   del,
   navigate,
@@ -10,7 +11,6 @@ import {
   stats,
   workspaceDetails,
 } from './src/lambdas';
-import localTable from './infra/dynamodb/local-table';
 
 const serverlessConfiguration: AWS = {
   service: 'mex-url-shortner',

@@ -57,7 +57,7 @@ export const stats = {
     {
       httpApi: {
         method: 'GET',
-        path: '/stats/{url}',
+        path: '/stats',
         authorizer: 'workduckAuthorizer',
       },
     },
@@ -70,7 +70,7 @@ export const del = {
     {
       httpApi: {
         method: 'DELETE',
-        path: '/stats/{url}',
+        path: '/stats',
         authorizer: 'workduckAuthorizer',
       },
     },
@@ -83,7 +83,7 @@ export const workspaceDetails = {
     {
       httpApi: {
         method: 'GET',
-        path: '/stats',
+        path: '/stats/all',
         authorizer: 'workduckAuthorizer',
       },
     },

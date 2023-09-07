@@ -15,6 +15,7 @@ export const URLEntity = new Entity({
     urlHash: {
       sortKey: true,
       default: data => md5(data.workspace + data.url),
+      transform: (val, data) => val ?? md5(data.pk + data.url),
       prefix: 'LINK_',
       hidden: true,
     },
@@ -52,6 +53,7 @@ export const URLStatsEntity = new Entity({
     urlHash: {
       sortKey: true,
       default: data => md5(data.workspace + data.url),
+      transform: (val, data) => val ?? md5(data.pk + data.url),
       prefix: 'STATS_',
       hidden: true,
     },
